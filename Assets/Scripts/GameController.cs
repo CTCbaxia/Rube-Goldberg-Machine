@@ -16,6 +16,7 @@ public class GameController : MonoBehaviour
     public GameObject SelectPanel;
     public GameObject ManipulatePanel;
     public GameObject ScaleToolbar;// image trigger
+    public GameObject SelectToolbar;// image trigger
     public Button CreateButton;
     public Button SelectButton;
     public Button PlayButton;
@@ -57,7 +58,6 @@ public class GameController : MonoBehaviour
         }
         if (InScaleMode)
         {
-            print("SelectController.preObj.transform.localScale"+ SelectController.preObj.transform.localScale);
             GameObject Current = ScaleToolbar.transform.root.gameObject;
             float CurPoint = Current.transform.position.x;
             SelectController.preObj.transform.localScale = Initial + new Vector3(CurPoint, CurPoint, CurPoint);
@@ -114,8 +114,8 @@ public class GameController : MonoBehaviour
         if (type.Equals("Confirm"))
         {
             ManipulatePanel.SetActive(true);
-            // TODO: add selected obj to toolbar
-            // TODO: add now touching other obj will not get highligted
+            SelectController.preObj.transform.parent = SelectToolbar.transform;
+            // TODO: add now touching other obj will not get highligte
         }
         else if (type.Equals("Reselect")) {
             // TODO: allow user to select again
@@ -139,8 +139,6 @@ public class GameController : MonoBehaviour
         else if (type.Equals("Scale"))
         {
             Initial = SelectController.preObj.transform.localScale;
-            print("Initial:"+Initial);
-            //ObjType = type;
             InScaleMode = true;
         }
         else if (type.Equals("Rotate"))

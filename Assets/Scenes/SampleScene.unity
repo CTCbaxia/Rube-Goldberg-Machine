@@ -3016,7 +3016,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1094838554
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3927,6 +3927,8 @@ MonoBehaviour:
   SelectInfoPanel: {fileID: 660907012}
   SelectPanel: {fileID: 427241481}
   ManipulatePanel: {fileID: 1094838553}
+  ScaleToolbar: {fileID: 1145623318}
+  SelectToolbar: {fileID: 760588516}
   CreateButton: {fileID: 78196978}
   SelectButton: {fileID: 1568873243}
   PlayButton: {fileID: 907382767}
@@ -4263,10 +4265,10 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_NormalColor: {r: 0, g: 0, b: 0, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 1, g: 0.8327136, b: 0, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_PressedColor: {r: 0.3962264, g: 0.3962264, b: 0.3962264, a: 1}
+    m_DisabledColor: {r: 1, g: 0.8327136, b: 0, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -4309,7 +4311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.42745098}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.42745098}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -4345,7 +4347,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d8a266d3e51a4ae887fc3f570651e41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Toolbar: {fileID: 1145623318}
 --- !u!1 &1540115308
 GameObject:
   m_ObjectHideFlags: 0
