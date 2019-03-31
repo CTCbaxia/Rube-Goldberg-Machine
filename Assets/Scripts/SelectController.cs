@@ -2,19 +2,30 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using Vuforia;
+
+// Attached to hand
+/**
+ * User can move hand to select an object
+ * And Confirm selection or Quit select mode
+ * Once Confirmed, the Manipulation Panel shows up, and Confirm button turns to Reselect
+**/
 
 public class SelectController : MonoBehaviour
 {
     public Material PreSelect = null;
     public Material OnSelect;
     public GameObject Hand;
-    private GameObject preObj = null;
+    public static GameObject preObj = null;
     private GameObject Initial = null;
-    private float min;
-    private float max;
-    public static bool confirmed = false;
+
+    public static string TransformType = "";
+    public static float mid;
+    public static bool comfirmed = false;
     public GameObject ConfirmPanel;
     public GameObject ManipulatePanel;
+
 
     // Start is called before the first frame update
     void Start()
@@ -25,28 +36,13 @@ public class SelectController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        min = Math.Min(min, Hand.transform.position.x);
-        max = Math.Max(max, Hand.transform.position.x);
-        print(max - min);
 
-        //print(gameObject.transform.position.x + " " + gameObject.transform.position.y+ " " + gameObject.transform.position.z);
         if(preObj != null)
         {
-            GameObject Current = transform.root.gameObject;
-            float value = Current.transform.position.x - Initial.transform.position.x;
-            print("value:" + value);
-            preObj.transform.localScale += new Vector3(value * 5, 0, 0);
-
             // show confirm selection
-            ConfirmPanel.SetActive(true);
-
         }
+        // if quit selection mode, preObj = null, deselect select button
 
-        if (confirmed)
-        {
-            ConfirmPanel.SetActive(false);
-            ManipulatePanel.SetActive(true);
-        }
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -57,10 +53,11 @@ public class SelectController : MonoBehaviour
         PreSelect = other.gameObject.GetComponent<Renderer>().material;
         other.gameObject.GetComponent<Renderer>().material = OnSelect;
         preObj = other.gameObject;
-        print("collider:"+other.gameObject.name);
+        //print("collider:"+other.gameObject.name);
     }
     //private void OnTriggerExit(Collider other)
     //{
     //    other.gameObject.GetComponent<Renderer>().material = PreSelect;
     //}
+
 }

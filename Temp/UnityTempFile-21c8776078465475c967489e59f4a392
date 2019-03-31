@@ -313,7 +313,9 @@
 /define:ENABLE_VSTU
 /define:CSHARP_7_OR_LATER
 /define:CSHARP_7_3_OR_NEWER
+"Assets/ConfirmSelectController.cs"
 "Assets/ManipulateController.cs"
 "Assets/Scripts/CreateController.cs"
 "Assets/Scripts/GameController.cs"
-"Assets/SelectController.cs"
+"Assets/Scripts/SelectController.cs"
+"Assets/SelectInfoController.cs"
