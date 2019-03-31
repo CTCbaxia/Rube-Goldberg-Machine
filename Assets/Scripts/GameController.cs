@@ -15,12 +15,16 @@ public class GameController : MonoBehaviour
     public GameObject SelectInfoPanel;
     public GameObject SelectPanel;
     public GameObject ManipulatePanel;
+    public GameObject ScaleToolbar;// image trigger
     public Button CreateButton;
     public Button SelectButton;
     public Button PlayButton;
     public Button RestartButton;
     //public Button SConfirmButton;
     //public Button SQuitButton;
+    private Vector3 Initial;
+    private bool InScaleMode;
+
 
     // Start is called before the first frame update
     void Start()
@@ -45,6 +49,18 @@ public class GameController : MonoBehaviour
         {
             MakeSelect(MakeSelectController.ObjType);
             MakeSelectController.ObjType = "";
+        }
+        if (!ManipulateController.ObjType.Equals(""))
+        {
+            Manipulate(ManipulateController.ObjType);
+            ManipulateController.ObjType = "";
+        }
+        if (InScaleMode)
+        {
+            print("SelectController.preObj.transform.localScale"+ SelectController.preObj.transform.localScale);
+            GameObject Current = ScaleToolbar.transform.root.gameObject;
+            float CurPoint = Current.transform.position.x;
+            SelectController.preObj.transform.localScale = Initial + new Vector3(CurPoint, CurPoint, CurPoint);
         }
     }
 
@@ -102,17 +118,46 @@ public class GameController : MonoBehaviour
             // TODO: add now touching other obj will not get highligted
         }
         else if (type.Equals("Reselect")) {
-            // TODO: ManipulatePanel.SetActive(false), allow user to select again
-
+            // TODO: allow user to select again
+            ManipulatePanel.SetActive(false);
+            ManipulateController.ObjType = "";
         }
         else if (type.Equals("Quit"))
         {
             print("here click quit");
             SelectMode(false);
+            ManipulateController.ObjType = "";
         }
     }
 
+    public void Manipulate(string type)
+    {
+        if (type.Equals("Delete"))
+        {
+            Destroy(SelectController.preObj);//remove from select point?
+        }
+        else if (type.Equals("Scale"))
+        {
+            Initial = SelectController.preObj.transform.localScale;
+            print("Initial:"+Initial);
+            //ObjType = type;
+            InScaleMode = true;
+        }
+        else if (type.Equals("Rotate"))
+        {
 
+        }
+        else if (type.Equals("Translate"))
+        {
+
+        }
+
+    }
+
+
+
+
+    // helper function
     private void CreateMode(bool inCreateMode)
     {
         if (inCreateMode)
@@ -140,6 +185,7 @@ public class GameController : MonoBehaviour
             SelectInfoPanel.SetActive(false);
             SelectPanel.SetActive(false);
             SelectButton.interactable = true;
+
         }
     }
 }
