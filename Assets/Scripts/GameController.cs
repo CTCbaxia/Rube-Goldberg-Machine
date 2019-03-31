@@ -12,14 +12,15 @@ public class GameController : MonoBehaviour
     public GameObject Windmill;
     public GameObject CorStair;
     public GameObject CreatePanel;
+    public GameObject SelectInfoPanel;
     public GameObject SelectPanel;
     public GameObject ManipulatePanel;
     public Button CreateButton;
     public Button SelectButton;
     public Button PlayButton;
     public Button RestartButton;
-    public Button SConfirmButton;
-    public Button SQuitButton;
+    //public Button SConfirmButton;
+    //public Button SQuitButton;
 
     // Start is called before the first frame update
     void Start()
@@ -42,7 +43,8 @@ public class GameController : MonoBehaviour
         }
         if (!MakeSelectController.ObjType.Equals(""))
         {
-
+            MakeSelect(MakeSelectController.ObjType);
+            MakeSelectController.ObjType = "";
         }
     }
 
@@ -105,6 +107,7 @@ public class GameController : MonoBehaviour
         }
         else if (type.Equals("Quit"))
         {
+            print("here click quit");
             SelectMode(false);
         }
     }
@@ -128,11 +131,13 @@ public class GameController : MonoBehaviour
     {
         if (inSelectMode)
         {
+            SelectInfoPanel.SetActive(true);
             SelectPanel.SetActive(true);
             SelectButton.interactable = false;
         }
         else
         {
+            SelectInfoPanel.SetActive(false);
             SelectPanel.SetActive(false);
             SelectButton.interactable = true;
         }
