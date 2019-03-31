@@ -15,16 +15,22 @@ public class GameController : MonoBehaviour
     public GameObject SelectInfoPanel;
     public GameObject SelectPanel;
     public GameObject ManipulatePanel;
-    public GameObject ScaleToolbar;// image trigger
+    //public GameObject ScaleToolbar;// image trigger
     public GameObject SelectToolbar;// image trigger
     public Button CreateButton;
     public Button SelectButton;
     public Button PlayButton;
     public Button RestartButton;
+    public static bool InSelectMode;
     //public Button SConfirmButton;
     //public Button SQuitButton;
-    private Vector3 Initial;
+    private Transform initial;
+    private Vector3 InitialScale;
+    private Vector3 InitialPosition;
+    private Vector3 InitialRotation;
     private bool InScaleMode;
+    private bool InTranslateMode;
+    private bool InRotateMode;
 
 
     // Start is called before the first frame update
@@ -58,9 +64,45 @@ public class GameController : MonoBehaviour
         }
         if (InScaleMode)
         {
-            GameObject Current = ScaleToolbar.transform.root.gameObject;
-            float CurPoint = Current.transform.position.x;
-            SelectController.preObj.transform.localScale = Initial + new Vector3(CurPoint, CurPoint, CurPoint);
+            GameObject CurValue = SelectToolbar.transform.root.gameObject;
+            float vlaue = CurValue.transform.position.x;
+            //change scale
+            SelectController.preObj.transform.localScale = InitialScale + new Vector3(vlaue, vlaue, vlaue);
+
+            //maintain translate and rotation
+            SelectController.preObj.transform.position = InitialPosition;
+            SelectController.preObj.transform.rotation = Quaternion.Euler(InitialRotation);
+
+        }
+        if (InTranslateMode)
+        {
+
+        }
+        if (InRotateMode)
+        {
+
+        }
+    }
+
+    // Control menu selection and ui visibility
+    public void MenuSelect(string type)
+    {
+        if (type.Equals("Create"))
+        {
+            CreateMode(true);
+            SelectMode(false);
+        }
+        else if (type.Equals("Select"))
+        {
+            InSelectMode = true;
+            CreateMode(false);
+            SelectMode(true);
+        }
+        else if (type.Equals("Play"))
+        {
+        }
+        else if (type.Equals("Restart"))
+        {
         }
     }
 
@@ -74,6 +116,7 @@ public class GameController : MonoBehaviour
         }
         else if (type.Equals("Board"))
         {
+            print("Create!!!!!!!!!");
             obj = Instantiate(Board, World.transform, false);
         }
         else if (type.Equals("Windmill"))
@@ -87,26 +130,6 @@ public class GameController : MonoBehaviour
         list.Add(obj);
         CreateMode(false);
     }
-    // Control menu selection and ui visibility
-    public void MenuSelect(string type)
-    {
-        if (type.Equals("Create"))
-        {
-            CreateMode(true);
-            SelectMode(false);
-        }
-        else if (type.Equals("Select"))
-        {
-            CreateMode(false);
-            SelectMode(true);
-        }
-        else if (type.Equals("Play"))
-        {
-        }
-        else if (type.Equals("Restart"))
-        {
-        }
-    }
 
     public void MakeSelect(string type)
     {
@@ -114,11 +137,16 @@ public class GameController : MonoBehaviour
         if (type.Equals("Confirm"))
         {
             ManipulatePanel.SetActive(true);
+            InSelectMode = false; //now touching other obj will not get highligte
+
+            //record the current transform of the selected object
+            initial = SelectController.preObj.transform;
+
+            //transfer the selected object to SelectToolbar
             SelectController.preObj.transform.parent = SelectToolbar.transform;
-            // TODO: add now touching other obj will not get highligte
         }
         else if (type.Equals("Reselect")) {
-            // TODO: allow user to select again
+            InSelectMode = true;
             ManipulatePanel.SetActive(false);
             ManipulateController.ObjType = "";
         }
@@ -130,6 +158,7 @@ public class GameController : MonoBehaviour
         }
     }
 
+    // Select - Confirm - Manipulate Button Control
     public void Manipulate(string type)
     {
         if (type.Equals("Delete"))
@@ -138,16 +167,22 @@ public class GameController : MonoBehaviour
         }
         else if (type.Equals("Scale"))
         {
-            Initial = SelectController.preObj.transform.localScale;
+            //Initial = SelectController.preObj.transform.localScale;
+            InitialScale = initial.localScale;//get current scale
+            InitialRotation = initial.rotation.eulerAngles;
+            InitialPosition = initial.position;
+
             InScaleMode = true;
+            InRotateMode = false;
+            InTranslateMode = false;
         }
         else if (type.Equals("Rotate"))
         {
-
+            InRotateMode = true;
         }
         else if (type.Equals("Translate"))
         {
-
+            InTranslateMode = true;
         }
 
     }
@@ -155,7 +190,7 @@ public class GameController : MonoBehaviour
 
 
 
-    // helper function
+    //---- helper function for Menu Button Control, START
     private void CreateMode(bool inCreateMode)
     {
         if (inCreateMode)
@@ -186,4 +221,5 @@ public class GameController : MonoBehaviour
 
         }
     }
+    //---- helper function for Menu Button Control, END
 }

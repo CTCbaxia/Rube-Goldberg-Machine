@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Vuforia;
 
-// Attached to hand
+// Attached to hand, select an object
 /**
  * User can move hand to select an object
  * And Confirm selection or Quit select mode
@@ -23,9 +23,10 @@ public class SelectController : MonoBehaviour
     public static string TransformType = "";
     public static float mid;
     public static bool comfirmed = false;
-    public GameObject ConfirmPanel;
-    public GameObject ManipulatePanel;
-
+    //public GameObject ConfirmPanel;
+    //public GameObject ManipulatePanel;
+    public GameObject SelectInfoPanel;
+    public GameObject ImageTarget;
 
     // Start is called before the first frame update
     void Start()
@@ -43,9 +44,22 @@ public class SelectController : MonoBehaviour
         }
         // if quit selection mode, preObj = null, deselect select button
 
+        if (GameController.InSelectMode && IsTrackingMarker())
+        {
+            SelectInfoPanel.SetActive(false);
+        }
+        else if(GameController.InSelectMode && !IsTrackingMarker())
+        {
+            SelectInfoPanel.SetActive(true);
+            //print("Warning.....Losing hand");
+        }
+
     }
     private void OnTriggerEnter(Collider other)
     {
+        if (!GameController.InSelectMode) return;//if it is not in select mode, no select highlight will be made
+
+        //update selected object and highlight it
         if (preObj != null)
         {
             preObj.GetComponent<Renderer>().material = PreSelect;
@@ -53,11 +67,13 @@ public class SelectController : MonoBehaviour
         PreSelect = other.gameObject.GetComponent<Renderer>().material;
         other.gameObject.GetComponent<Renderer>().material = OnSelect;
         preObj = other.gameObject;
-        //print("collider:"+other.gameObject.name);
     }
-    //private void OnTriggerExit(Collider other)
-    //{
-    //    other.gameObject.GetComponent<Renderer>().material = PreSelect;
-    //}
+    private bool IsTrackingMarker()
+    {
+        //var imageTarget = GameObject.Find(imageTargetName);
+        var trackable = ImageTarget.GetComponent<TrackableBehaviour>();
+        var status = trackable.CurrentStatus;
+        return status == TrackableBehaviour.Status.TRACKED;
+    }
 
 }
