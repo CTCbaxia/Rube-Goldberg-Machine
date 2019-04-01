@@ -19,8 +19,11 @@ public class GameController : MonoBehaviour
     public GameObject ManipulatePanel;
     public GameObject DeleteConfirmPanel;
     //public GameObject ScaleToolbar;// image trigger
-    public GameObject SelectToolbar;// image trigger
+    private GameObject SelectToolbar;// image trigger
+    public GameObject HandToolbar;
+    public GameObject PointerToolbar;
     public GameObject Hand;
+    public static GameObject SelectObject;
 
     //Button
     public Button CreateButton;
@@ -41,10 +44,8 @@ public class GameController : MonoBehaviour
     public static bool InSelectMode;
     public static bool SelectedMode;
     public static string ConfirmBtnText;
-    //public bool InConfirmMode;
-    //public Button SConfirmButton;
-    //public Button SQuitButton;
 
+    public bool InDeleteMode;
     private bool InScaleMode;
     private bool InTranslateMode;
     private bool InRotateMode;
@@ -71,6 +72,7 @@ public class GameController : MonoBehaviour
         }
         if (!MakeSelectController.ObjType.Equals(""))
         {
+            print("MakeSelectController:" + SelectObject);
             MakeSelect(MakeSelectController.ObjType);
             MakeSelectController.ObjType = "";
         }
@@ -79,59 +81,53 @@ public class GameController : MonoBehaviour
             Manipulate(ManipulateController.ObjType);
             ManipulateController.ObjType = "";
         }
+
+        // Select Mode
+
+
+
+        // For all kinds of selection
         if (InSelectMode)
         {
+            if (SelectModeController.ObjType.Equals("Hand"))
+            {
+                SelectObject = SelectHandController.preObj;
+                SelectToolbar = HandToolbar;
+            }
+            else if (SelectModeController.ObjType.Equals("Pointer"))
+            {
+                SelectObject = SelectPointerController.preObj;
+                SelectToolbar = PointerToolbar;
+            }
+
             //for panel visibility
             SelectMode(InSelectMode);
             ManiMode(SelectedMode);
-            if (!SelectedMode)
-            {
-                ConfirmBtnText = "Confirm";
-            }
-            else
-            {
-                ConfirmBtnText = "Reselect";
-            }
 
+            if (!SelectedMode) ConfirmBtnText = "Confirm";
+            else ConfirmBtnText = "Reselect";
         }
         else
         {
             SelectMode(InSelectMode);
+            ManiMode(SelectedMode);
         }
+        // if in the manipulation mode
+        if (SelectedMode)
+        {
+            //button update
+            IsButtonPressed(DeleteButton, InDeleteMode);
+            IsButtonPressed(ScaleButton, InScaleMode);
+            IsButtonPressed(RotateButton, InRotateMode);
+            IsButtonPressed(TranslateButton, InTranslateMode);
 
-        if (InScaleMode)
-        {
-            GameObject CurValue = SelectToolbar.transform.root.gameObject;
-            float vlaue = CurValue.transform.position.x;
-            //change scale
-            SelectController.preObj.transform.localScale = InitialScale + new Vector3(vlaue, vlaue, vlaue);
+            if (SelectObject != null)
+            {
+                Manipulate();
+            }
+        }
+        //if (SelectObject != null && SelectedMode) Manipulate();
 
-            //maintain translate and rotation
-            SelectController.preObj.transform.position = InitialPosition;
-            SelectController.preObj.transform.rotation = Quaternion.Euler(InitialRotation);
-
-        }
-        else if (InTranslateMode && !InRotateMode)
-        {
-            SelectController.preObj.transform.localScale = InitialScale;
-            SelectController.preObj.transform.rotation = Quaternion.Euler(InitialRotation);
-        }
-        else if (InRotateMode && !InTranslateMode)
-        {
-            SelectController.preObj.transform.localScale = InitialScale;
-            SelectController.preObj.transform.position = InitialPosition;
-        }
-        else if (InTranslateMode && InRotateMode)
-        {
-
-        }
-        else
-        {
-            //no button pressed, keep the original transform
-            SelectController.preObj.transform.localScale = InitialScale;
-            SelectController.preObj.transform.position = InitialPosition;
-            SelectController.preObj.transform.rotation = Quaternion.Euler(InitialRotation);
-        }
     }
 
     // Control menu selection and ui visibility
@@ -190,8 +186,17 @@ public class GameController : MonoBehaviour
         {
             InSelectMode = true;
             SelectedMode = true;
+
             //record the current transform of the selected object
-            initial = SelectController.preObj.transform;
+            initial = SelectObject.transform;
+            UpdateObj();
+            //print(InitialScale);
+
+            //initialize button value
+            InDeleteMode = false;
+            InScaleMode = false;
+            InRotateMode = false;
+            InTranslateMode = false;
         }
         else if (type.Equals("Reselect")) 
         {
@@ -201,33 +206,60 @@ public class GameController : MonoBehaviour
         else if (type.Equals("Quit"))
         {
             InSelectMode = false;
+            SelectedMode = false;
+
             SelectMode(false);
         }
         //ManiMode(SelectedMode);
     }
 
-    // Select - Confirm - Manipulate Button Control
+    // Select - Confirm - Manipulate Control
     public void Manipulate(string type)
     {
+        UpdateObj();
+
         if (type.Equals("Delete"))
         {
-            DeleteConfirmPanel.SetActive(true);
-            IsButtonPressed(DeleteButton, false);
-            IsButtonPressed(ScaleButton, false);
-            IsButtonPressed(RotateButton, false);
-            IsButtonPressed(TranslateButton, false);
+            if (InDeleteMode)
+            {
+                InDeleteMode = false;
+                //IsButtonPressed(DeleteButton, false);
+            }
+            else
+            {
+                InDeleteMode = true;
+                InScaleMode = false;
+                InRotateMode = false;
+                InTranslateMode = false;
+
+                DeleteConfirmPanel.SetActive(true);
+                //IsButtonPressed(DeleteButton, true);
+                //IsButtonPressed(ScaleButton, false);
+                //IsButtonPressed(RotateButton, false);
+                //IsButtonPressed(TranslateButton, false);
+            }
+
         }
         else if (type.Equals("Scale"))
         {
-            UpdateObj();
+            if (InScaleMode)
+            {
+                InScaleMode = false;
+                //IsButtonPressed(ScaleButton, false);
+            }
+            else
+            {
+                InDeleteMode = false;
+                InScaleMode = true;
+                InRotateMode = false;
+                InTranslateMode = false;
 
-            InScaleMode = true;
-            InRotateMode = false;
-            InTranslateMode = false;
+                //IsButtonPressed(DeleteButton, false);
+                //IsButtonPressed(ScaleButton, true);
+                //IsButtonPressed(RotateButton, false);
+                //IsButtonPressed(TranslateButton, false);
+            }
 
-            IsButtonPressed(ScaleButton, true);
-            IsButtonPressed(RotateButton, false);
-            IsButtonPressed(TranslateButton, false);
         }
         else if (type.Equals("Rotate"))
         {
@@ -237,20 +269,18 @@ public class GameController : MonoBehaviour
                 // deselect button
                 InRotateMode = false;
 
-                UpdateObj();
-
-                IsButtonPressed(ScaleButton, false);
-                IsButtonPressed(RotateButton, false);
+                //IsButtonPressed(RotateButton, false);
             }
             else
             {
                 // select button
+                InDeleteMode = false;
+                InScaleMode = false;
                 InRotateMode = true;
 
-                UpdateObj();
-
-                IsButtonPressed(ScaleButton, false);
-                IsButtonPressed(RotateButton, true);
+                //IsButtonPressed(DeleteButton, false);
+                //IsButtonPressed(ScaleButton, false);
+                //IsButtonPressed(RotateButton, true);
             }
 
         }
@@ -260,28 +290,60 @@ public class GameController : MonoBehaviour
             if (InTranslateMode)
             {
                 InTranslateMode = false;
-
-                UpdateObj();
-
-                IsButtonPressed(ScaleButton, false);
-                IsButtonPressed(TranslateButton, false);
+                //IsButtonPressed(TranslateButton, false);
             }
             else
             {
+                InDeleteMode = false;
+                InScaleMode = false;
                 InTranslateMode = true;
 
-                UpdateObj();
-
-                IsButtonPressed(ScaleButton, false);
-                IsButtonPressed(TranslateButton, true);
+                //IsButtonPressed(DeleteButton, false);
+                //IsButtonPressed(ScaleButton, false);
+                //IsButtonPressed(TranslateButton, true);
             }
 
         }
 
     }
 
+    //---- Manipulate Function
+    private void Manipulate()
+    {
+        //manipulation
+        if (InScaleMode)
+        {
+            GameObject CurValue = SelectToolbar.transform.root.gameObject;
+            float vlaue = CurValue.transform.position.x;
+            //change scale
+            SelectObject.transform.localScale = InitialScale + new Vector3(vlaue, vlaue, vlaue);
 
+            //maintain translate and rotation
+            SelectObject.transform.position = InitialPosition;
+            SelectObject.transform.rotation = Quaternion.Euler(InitialRotation);
 
+        }
+        else if (InTranslateMode && !InRotateMode)
+        {
+            SelectObject.transform.localScale = InitialScale;
+            SelectObject.transform.rotation = Quaternion.Euler(InitialRotation);
+        }
+        else if (InRotateMode && !InTranslateMode)
+        {
+            SelectObject.transform.localScale = InitialScale;
+            SelectObject.transform.position = InitialPosition;
+        }
+        else if (InTranslateMode && InRotateMode)
+        {
+
+        }
+        else if (SelectedMode && !InTranslateMode && !InRotateMode && !InScaleMode)
+        {
+            //SelectObject.transform.localScale = InitialScale;
+            SelectObject.transform.position = InitialPosition;
+            SelectObject.transform.rotation = Quaternion.Euler(InitialRotation);
+        }
+    }
 
     //---- helper function for Menu Button Control, START
     private void CreateMode(bool inCreateMode)
@@ -311,11 +373,9 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            //ManipulatePanel.SetActive(false);
             SelectInfoPanel.SetActive(false);
             SelectPanel.SetActive(false);
             SelectButton.interactable = true;
-
         }
     }
     //---- helper function for Menu Button Control, END
@@ -325,36 +385,29 @@ public class GameController : MonoBehaviour
     {
         if (isManuMode)
         {
-
-            InSelectMode = false; //now touching other obj will not get highligte
-
             ManipulatePanel.SetActive(true);
             ManipulateController.ObjType = "";
             Hand.GetComponent<Collider>().isTrigger = false;
 
-            InScaleMode = false;
-            InRotateMode = false;
-            InTranslateMode = false;
-
             //transfer the selected object to Hand
-            if(SelectController.preObj != null){
-                SelectController.preObj.transform.parent = SelectToolbar.transform;
+            if(SelectObject != null){
+                SelectObject.transform.parent = SelectToolbar.transform;
             }
+
         }
         else
         {
             ManipulatePanel.SetActive(false);
+            DeleteConfirmPanel.SetActive(false);
+
             ManipulateController.ObjType = "";
             Hand.GetComponent<Collider>().isTrigger = true;
 
-            InScaleMode = false;
-            InRotateMode = false;
-            InTranslateMode = false;
 
             //transfer the selected object back to World
-            if (SelectController.preObj != null)
+            if (SelectObject != null)
             {
-                SelectController.preObj.transform.parent = World.transform;
+                SelectObject.transform.parent = World.transform;
             }
         }
     }
@@ -378,6 +431,7 @@ public class GameController : MonoBehaviour
             btn.colors = cb;
         }
     }
+
     //---- Update Object Attributes
     private void UpdateObj()
     {

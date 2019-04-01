@@ -24,21 +24,5 @@ public class MakeSelectController : MonoBehaviour
     public void MakeSelect(string type)
     {
         ObjType = type;
-        //print("gameObjec:"+gameObject.GetComponentInChildren());
-        //if (type.Equals("Quit"))
-        //{
-        //    ObjType = "Quit";
-        //}
-        //else if (type.Equals(ButtonText.text))
-        //{
-        //    // both are confirm
-        //    ObjType = "Confirm";
-        //    ChangeText("Reselect");
-        //}
-        //else
-        //{
-        //    ObjType = "Reselect";
-        //    ChangeText("Confirm");
-        //}
     }
 }

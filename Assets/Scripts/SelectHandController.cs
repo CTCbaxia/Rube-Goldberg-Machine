@@ -12,26 +12,25 @@ using Vuforia;
  * Once Confirmed, the Manipulation Panel shows up, and Confirm button turns to Reselect
 **/
 
-public class SelectController : MonoBehaviour
+public class SelectHandController : MonoBehaviour
 {
     public Material PreSelect = null;
     public Material OnSelect;
-    public GameObject Hand;
+    //public GameObject Hand;
+    //public GameObject Pointer;
     public static GameObject preObj = null;
-    private GameObject Initial = null;
+    //private GameObject Initial = null;
 
-    public static string TransformType = "";
-    public static float mid;
-    public static bool comfirmed = false;
-    //public GameObject ConfirmPanel;
-    //public GameObject ManipulatePanel;
+    //public static string TransformType = "";
+    //public static float mid;
+    //public static bool comfirmed = false;
     public GameObject SelectInfoPanel;
     public GameObject ImageTarget;
 
     // Start is called before the first frame update
     void Start()
     {
-        Initial = transform.root.gameObject;
+        //Initial = transform.root.gameObject;
     }
 
     // Update is called once per frame
@@ -54,10 +53,12 @@ public class SelectController : MonoBehaviour
             //print("Warning.....Losing hand");
         }
 
+
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (!GameController.InSelectMode) return;//if it is not in select mode, no select highlight will be made
+        //if it is not in select mode or have already selected, no select highlight and update will be made
+        if (!GameController.InSelectMode || GameController.SelectedMode) return;
 
         //update selected object and highlight it
         if (preObj != null)
@@ -68,6 +69,7 @@ public class SelectController : MonoBehaviour
         other.gameObject.GetComponent<Renderer>().material = OnSelect;
         preObj = other.gameObject;
     }
+
     private bool IsTrackingMarker()
     {
         //var imageTarget = GameObject.Find(imageTargetName);

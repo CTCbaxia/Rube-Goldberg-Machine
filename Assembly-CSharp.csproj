@@ -66,8 +66,10 @@
     <Compile Include="Assets\Scripts\MakeSelectController.cs" />
     <Compile Include="Assets\Scripts\ManipulateController.cs" />
     <Compile Include="Assets\Scripts\MenuController.cs" />
-    <Compile Include="Assets\Scripts\SelectController.cs" />
+    <Compile Include="Assets\Scripts\SelectHandController.cs" />
     <Compile Include="Assets\Scripts\SelectInfoController.cs" />
+    <Compile Include="Assets\Scripts\SelectModeController.cs" />
+    <Compile Include="Assets\Scripts\SelectPointerController.cs" />
     <None Include="Assets\Vuforia\Shaders\ColoredLines.shader" />
     <None Include="Assets\Vuforia\Shaders\CameraDiffuse.shader" />
     <None Include="Assets\Vuforia\Shaders\VertexLitWithZ.shader" />
