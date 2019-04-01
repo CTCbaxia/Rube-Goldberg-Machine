@@ -8,27 +8,37 @@ public class MakeSelectController : MonoBehaviour
     // Change confirm button text
     public Text ButtonText;
     public static string ObjType = "";
+
+    void FixedUpdate()
+    {
+        if (gameObject.name.Equals("Confirm"))
+        {
+            ChangeText(GameController.ConfirmBtnText);
+        }
+
+    }
     private void ChangeText(string text)
     {
         ButtonText.text = text;
     }
     public void MakeSelect(string type)
     {
+        ObjType = type;
         //print("gameObjec:"+gameObject.GetComponentInChildren());
-        if(type.Equals("Quit"))
-        {
-            ObjType = "Quit";
-        }
-        else if (type.Equals(ButtonText.text))
-        {
-            // both are confirm
-            ObjType = "Confirm";
-            ChangeText("Reselect");
-        }
-        else
-        {
-            ObjType = "Reselect";
-            ChangeText("Confirm");
-        }
+        //if (type.Equals("Quit"))
+        //{
+        //    ObjType = "Quit";
+        //}
+        //else if (type.Equals(ButtonText.text))
+        //{
+        //    // both are confirm
+        //    ObjType = "Confirm";
+        //    ChangeText("Reselect");
+        //}
+        //else
+        //{
+        //    ObjType = "Reselect";
+        //    ChangeText("Confirm");
+        //}
     }
 }

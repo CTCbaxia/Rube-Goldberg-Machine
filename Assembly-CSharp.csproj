@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\CreateController.cs" />
+    <Compile Include="Assets\Scripts\DeleteController.cs" />
     <Compile Include="Assets\Scripts\GameController.cs" />
     <Compile Include="Assets\Scripts\MakeSelectController.cs" />
     <Compile Include="Assets\Scripts\ManipulateController.cs" />

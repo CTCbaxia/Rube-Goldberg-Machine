@@ -7,7 +7,7 @@ using UnityEngine;
 public class ManipulateController : MonoBehaviour
 {
     public static string ObjType = "";
-    private void Manipulate(string type)
+    public void Manipulate(string type)
     {
         ObjType = type;
     }
