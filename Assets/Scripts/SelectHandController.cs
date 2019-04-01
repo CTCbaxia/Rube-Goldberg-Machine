@@ -36,22 +36,28 @@ public class SelectHandController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-        if(preObj != null)
+        // Deselect preObj
+        if (!GameController.InSelectMode)
         {
-            // show confirm selection
+            if (preObj != null)
+            {
+                preObj.GetComponent<Renderer>().material = PreSelect;//color return
+            }
+            preObj = null;
         }
+        else
+        {
+            if (IsTrackingMarker())
+            {
+                SelectInfoPanel.SetActive(false);
+            }
+            else if (!IsTrackingMarker())
+            {
+                SelectInfoPanel.SetActive(true);
+            }
+        }
+
         // if quit selection mode, preObj = null, deselect select button
-
-        if (GameController.InSelectMode && IsTrackingMarker())
-        {
-            SelectInfoPanel.SetActive(false);
-        }
-        else if(GameController.InSelectMode && !IsTrackingMarker())
-        {
-            SelectInfoPanel.SetActive(true);
-            //print("Warning.....Losing hand");
-        }
 
 
     }

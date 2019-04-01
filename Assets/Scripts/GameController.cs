@@ -82,10 +82,6 @@ public class GameController : MonoBehaviour
             ManipulateController.ObjType = "";
         }
 
-        // Select Mode
-
-
-
         // For all kinds of selection
         if (InSelectMode)
         {
@@ -111,7 +107,10 @@ public class GameController : MonoBehaviour
         {
             SelectMode(InSelectMode);
             ManiMode(SelectedMode);
+            SelectObject = null;
         }
+
+
         // if in the manipulation mode
         if (SelectedMode)
         {
@@ -208,7 +207,7 @@ public class GameController : MonoBehaviour
             InSelectMode = false;
             SelectedMode = false;
 
-            SelectMode(false);
+            //SelectMode(false);
         }
         //ManiMode(SelectedMode);
     }
@@ -223,7 +222,6 @@ public class GameController : MonoBehaviour
             if (InDeleteMode)
             {
                 InDeleteMode = false;
-                //IsButtonPressed(DeleteButton, false);
             }
             else
             {
@@ -233,10 +231,6 @@ public class GameController : MonoBehaviour
                 InTranslateMode = false;
 
                 DeleteConfirmPanel.SetActive(true);
-                //IsButtonPressed(DeleteButton, true);
-                //IsButtonPressed(ScaleButton, false);
-                //IsButtonPressed(RotateButton, false);
-                //IsButtonPressed(TranslateButton, false);
             }
 
         }
@@ -245,7 +239,6 @@ public class GameController : MonoBehaviour
             if (InScaleMode)
             {
                 InScaleMode = false;
-                //IsButtonPressed(ScaleButton, false);
             }
             else
             {
@@ -253,11 +246,6 @@ public class GameController : MonoBehaviour
                 InScaleMode = true;
                 InRotateMode = false;
                 InTranslateMode = false;
-
-                //IsButtonPressed(DeleteButton, false);
-                //IsButtonPressed(ScaleButton, true);
-                //IsButtonPressed(RotateButton, false);
-                //IsButtonPressed(TranslateButton, false);
             }
 
         }
@@ -266,10 +254,7 @@ public class GameController : MonoBehaviour
             InScaleMode = false;
             if (InRotateMode)
             {
-                // deselect button
                 InRotateMode = false;
-
-                //IsButtonPressed(RotateButton, false);
             }
             else
             {
@@ -277,10 +262,6 @@ public class GameController : MonoBehaviour
                 InDeleteMode = false;
                 InScaleMode = false;
                 InRotateMode = true;
-
-                //IsButtonPressed(DeleteButton, false);
-                //IsButtonPressed(ScaleButton, false);
-                //IsButtonPressed(RotateButton, true);
             }
 
         }
@@ -290,17 +271,12 @@ public class GameController : MonoBehaviour
             if (InTranslateMode)
             {
                 InTranslateMode = false;
-                //IsButtonPressed(TranslateButton, false);
             }
             else
             {
                 InDeleteMode = false;
                 InScaleMode = false;
                 InTranslateMode = true;
-
-                //IsButtonPressed(DeleteButton, false);
-                //IsButtonPressed(ScaleButton, false);
-                //IsButtonPressed(TranslateButton, true);
             }
 
         }
@@ -402,7 +378,6 @@ public class GameController : MonoBehaviour
 
             ManipulateController.ObjType = "";
             Hand.GetComponent<Collider>().isTrigger = true;
-
 
             //transfer the selected object back to World
             if (SelectObject != null)

@@ -21,47 +21,58 @@ public class SelectPointerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!GameController.InSelectMode || GameController.SelectedMode) return;
-
-        if (GameController.InSelectMode && IsTrackingMarker())
+        // Deselect preObj
+        if (!GameController.InSelectMode)
         {
-            SelectInfoPanel.SetActive(false);
-        }
-        else if (GameController.InSelectMode && !IsTrackingMarker())
-        {
-            SelectInfoPanel.SetActive(true);
-            //print("Warning.....Losing hand");
-        }
-
-
-        //cast a ray
-        lr.startWidth = 0.002f; 
-        lr.endWidth = 0.002f;
-        lr.SetPosition(0, transform.position);
-        lr.SetPosition(1, transform.forward * 20 + transform.position);
-
-        // update selected object
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit))
-        {
-            if (hit.transform.gameObject.CompareTag("Plane"))
+            if (preObj != null)
             {
-                return;
+                preObj.GetComponent<Renderer>().material = PreSelect;//color return
             }
-            else
+            preObj = null;
+        }
+        else
+        {
+            if (IsTrackingMarker())
             {
-                GameObject curObj = hit.transform.gameObject;
+                SelectInfoPanel.SetActive(false);
+            }
+            else if (!IsTrackingMarker())
+            {
+                SelectInfoPanel.SetActive(true);
+            }
 
-                if (preObj != null)
+            //if it is not in select mode or have already selected, no select highlight and update will be made
+            if (GameController.SelectedMode) return;
+
+            //cast a ray
+            lr.startWidth = 0.002f;
+            lr.endWidth = 0.002f;
+            lr.SetPosition(0, transform.position);
+            lr.SetPosition(1, transform.forward * 20 + transform.position);
+
+            // update selected object
+            RaycastHit hit;
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit))
+            {
+                if (hit.transform.gameObject.CompareTag("Plane"))
                 {
-                    preObj.GetComponent<Renderer>().material = PreSelect;
+                    return;
                 }
-                //print("hit:" + curObj);
-                PreSelect = curObj.GetComponent<Renderer>().material;
-                curObj.GetComponent<Renderer>().material = OnSelect;
-                preObj = curObj;
+                else
+                {
+                    GameObject curObj = hit.transform.gameObject;
+
+                    if (preObj != null)
+                    {
+                        preObj.GetComponent<Renderer>().material = PreSelect;
+                    }
+                    PreSelect = curObj.GetComponent<Renderer>().material;
+                    curObj.GetComponent<Renderer>().material = OnSelect;
+                    preObj = curObj;
+                }
             }
         }
+
     }
     private bool IsTrackingMarker()
     {
